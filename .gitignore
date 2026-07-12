@@ -12,7 +12,9 @@ yarn.lock
 # Environment files
 .env
 .env.local
-.env.production.next/
+.env.production
+.env.development
+.next/
 node_modules/
 **/.next/
 **/node_modules/
@@ -20,3 +22,27 @@ node_modules/
 node_modules/
 **/.next/
 **/node_modules/
+
+# Environment variables (keep local only)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Dependencies
+node_modules/
+yarn.lock
+package-lock.json   # optional (some teams track it; but it's large)
+
+# OS / Editor files
+.DS_Store
+*.log
+.vscode/
+.idea/.env.local
