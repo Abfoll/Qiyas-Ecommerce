@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const links = [
   { label: "Home", href: "/" },
@@ -9,6 +12,8 @@ const links = [
 ];
 
 export default function Navbar() {
+  const { user, loading, logout } = useAuth();
+
   return (
     <nav className="flex items-center justify-between px-8 py-5 border-b border-slate-200">
       <Link href="/" className="text-xl font-bold">
@@ -32,12 +37,32 @@ export default function Navbar() {
         <Link href="/favorites" aria-label="Favorites">
           ♡
         </Link>
-        <Link href="/profile" aria-label="Profile">
-          👤
-        </Link>
         <Link href="/cart" aria-label="Cart">
           🛒
         </Link>
+
+        {loading ? null : user ? (
+          <div className="flex items-center gap-3 text-sm">
+            <Link href="/profile" className="hover:text-slate-900 transition-colors">
+              {user.name.split(" ")[0]}
+            </Link>
+            <button onClick={logout} className="text-slate-400 hover:text-slate-900 transition-colors">
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3 text-sm">
+            <Link href="/login" className="hover:text-slate-900 transition-colors">
+              Login
+            </Link>
+            <Link
+              href="/register"
+              className="bg-slate-900 text-white px-3 py-1.5 rounded-md hover:bg-slate-700 transition-colors"
+            >
+              Sign up
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );
