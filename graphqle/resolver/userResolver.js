@@ -1,6 +1,6 @@
 import User from "../../models/user.js";
-
-
+import bcrypt from "bcrypt";
+import generateToken from "../../utils/generateToken.js"
 const userResolver = {
 
 
@@ -29,7 +29,51 @@ const userResolver = {
 
     Mutation:{
 
+        loginUser: async(parent,args)=>{
 
+
+            const user = await User.findOne({
+                email:args.email
+            });
+            if(!user){
+
+                throw new Error("Invalid email or password");
+
+            }
+
+
+
+            const isMatch = await bcrypt.compare(
+                args.password,
+                user.password
+            );
+
+
+
+            if(!isMatch){
+
+                throw new Error("Invalid email or password");
+
+            }
+
+
+
+            const token = generateToken(user);
+
+
+
+            return {
+
+                token,
+
+                user
+
+            };
+
+
+        }
+
+    },
         createUser: async(parent,args)=>{
 
 
@@ -77,9 +121,7 @@ const userResolver = {
 
         },
 
-
-
-        deleteUser: async(parent,args)=>{
+    deleteUser: async(parent,args)=>{
 
 
             return await User.findByIdAndDelete(
@@ -92,10 +134,7 @@ const userResolver = {
         }
 
 
-    }
-
-
-};
+    };
 
 
 

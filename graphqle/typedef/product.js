@@ -1,33 +1,37 @@
 import {
-    GraphQLEnumType,
-    GraphQLList,
+    GraphQLObjectType,
     GraphQLID,
     GraphQLString,
+    GraphQLFloat,
     GraphQLBoolean,
-    GraphQLObjectType,
-    GraphQLFloat
+    GraphQLList,
+    GraphQLInt
 } from "graphql";
 
+import categoryType from "./category.js";
 
-const GenderTarget = new GraphQLEnumType({
 
-    name:"GenderTarget",
+const ProductVariantType = new GraphQLObjectType({
 
-    values:{
+    name:"ProductVariant",
 
-        MEN:{
-            value:"men"
+    fields:()=>({
+
+        color:{
+            type:GraphQLString
         },
 
-        WOMEN:{
-            value:"women"
+
+        size:{
+            type:GraphQLString
         },
 
-        KIDS:{
-            value:"kids"
+
+        stock:{
+            type:GraphQLInt
         }
 
-    }
+    })
 
 });
 
@@ -49,13 +53,13 @@ const productType = new GraphQLObjectType({
         },
 
 
-        price:{
-            type:GraphQLFloat
+        description:{
+            type:GraphQLString
         },
 
 
-        description:{
-            type:GraphQLString
+        price:{
+            type:GraphQLFloat
         },
 
 
@@ -64,15 +68,29 @@ const productType = new GraphQLObjectType({
         },
 
 
+        category:{
+            type:categoryType
+        },
+
+
         gender:{
-            type:GenderTarget
+            type:GraphQLString
+        },
+
+
+        variants:{
+            type:new GraphQLList(ProductVariantType)
         },
 
 
         featured:{
             type:GraphQLBoolean
-        }
+        },
 
+
+        rating:{
+            type:GraphQLFloat
+        }
 
     })
 

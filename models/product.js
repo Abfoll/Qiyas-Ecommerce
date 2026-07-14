@@ -1,128 +1,91 @@
 import mongoose from "mongoose";
-
-
-const { Schema } = mongoose;
-
-
-
-const productVariantSchema = new Schema({
-
-    color:{
-        type:String,
-        required:true
-    },
-
-
-    size:{
-        type:String,
-        required:true
-    },
-
-
-    stock:{
-        type:Number,
-        required:true,
-        min:0
-    }
-
-});
-
-
-
-const productSchema = new Schema({
+const productSchema = new mongoose.Schema({
 
 
     name:{
-
         type:String,
-
         required:true
-
+    },
+    description:{
+        type:String,
+        required:true
     },
 
 
     price:{
-
         type:Number,
-
         required:true,
-
         min:0
-
     },
 
 
-    description:{
-
-        type:String,
-
-        required:true
-
-    },
-
-
-    images:[{
-
-        type:String,
-
-        required:true
-
-    }],
+    images:[String],
 
 
 
     category:{
-
-        type:Schema.Types.ObjectId,
-
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Category",
-
         required:true
-
     },
-
-
-
-    variants:[productVariantSchema],
-
 
 
     gender:{
-
         type:String,
-
-        required:true,
-
         enum:[
-
             "men",
             "women",
             "kids"
-
-        ]
-
+        ],
+        required:true
     },
+
+
+    variants:[
+
+        {
+
+            color:String,
+
+
+            size:{
+                type:String,
+                enum:[
+                    "XS",
+                    "S",
+                    "M",
+                    "L",
+                    "XL",
+                    "XXL"
+                ]
+            },
+
+
+            stock:{
+                type:Number,
+                default:0
+            }
+
+        }
+
+    ],
 
 
 
     featured:{
-
         type:Boolean,
-
         default:false
+    },
 
+
+    rating:{
+        type:Number,
+        default:0
     }
 
 
 
-},{
-
-    timestamps:true
-
-});
-
-
-
+},{timestamps:true});
 export default mongoose.model(
     "Product",
     productSchema

@@ -1,32 +1,21 @@
 import {
-    GraphQLFloat,
-    GraphQLID,
-    GraphQLInt,
-    GraphQLList,
     GraphQLObjectType,
-    GraphQLString
+    GraphQLID,
+    GraphQLString,
+    GraphQLFloat,
+    GraphQLInt,
+    GraphQLList
 } from "graphql";
 
 
 
-const orderItemType = new GraphQLObjectType({
+const OrderItemType = new GraphQLObjectType({
 
     name:"OrderItem",
 
     fields:()=>({
 
-
-        id:{
-            type:GraphQLID
-        },
-
-
         product:{
-            type:GraphQLID
-        },
-
-
-        user:{
             type:GraphQLID
         },
 
@@ -36,25 +25,23 @@ const orderItemType = new GraphQLObjectType({
         },
 
 
-        totalPrice:{
+        size:{
+            type:GraphQLString
+        },
+
+
+        color:{
+            type:GraphQLString
+        },
+
+
+        price:{
             type:GraphQLFloat
-        },
-
-
-        selectedcolor:{
-            type:GraphQLString
-        },
-
-
-        selectedsize:{
-            type:GraphQLString
         }
-
 
     })
 
 });
-
 
 
 
@@ -63,7 +50,6 @@ const ShippingAddressType = new GraphQLObjectType({
     name:"ShippingAddress",
 
     fields:()=>({
-
 
         street:{
             type:GraphQLString
@@ -75,20 +61,14 @@ const ShippingAddressType = new GraphQLObjectType({
         },
 
 
-        state:{
-            type:GraphQLString
-        },
-
-
-        postalCode:{
-            type:GraphQLString
-        },
-
-
         country:{
             type:GraphQLString
-        }
+        },
 
+
+        phone:{
+            type:GraphQLString
+        }
 
     })
 
@@ -96,14 +76,11 @@ const ShippingAddressType = new GraphQLObjectType({
 
 
 
-
 const orderType = new GraphQLObjectType({
 
     name:"Order",
 
-
     fields:()=>({
-
 
         id:{
             type:GraphQLID
@@ -116,17 +93,17 @@ const orderType = new GraphQLObjectType({
 
 
         items:{
-            type:new GraphQLList(orderItemType)
-        },
-
-
-        totalAmount:{
-            type:GraphQLFloat
+            type:new GraphQLList(OrderItemType)
         },
 
 
         shippingAddress:{
             type:ShippingAddressType
+        },
+
+
+        totalAmount:{
+            type:GraphQLFloat
         },
 
 
@@ -137,28 +114,11 @@ const orderType = new GraphQLObjectType({
 
         orderStatus:{
             type:GraphQLString
-        },
-
-
-        paymentId:{
-            type:GraphQLString
-        },
-
-
-        createdAt:{
-            type:GraphQLString
-        },
-
-
-        updatedAt:{
-            type:GraphQLString
         }
-
 
     })
 
 });
-
 
 
 export default orderType;

@@ -1,7 +1,10 @@
 import productQuery from "./queries/productQueries.js";
 import userQuery from "./queries/userQueries.js";
 import orderQuery from "./queries/orderQueries.js";
-
+import categoryQuery from "./queries/categoryQueries.js";
+import cartMutation from "./mutation/cartMutation.js";
+import cartQuery from "./queries/cartQueries.js";
+import categoryMutation from "./mutation/categoryMutation.js";
 import productMutation from "./mutation/productMutation.js";
 import userMutation from "./mutation/userMutation.js";
 import orderMutation from "./mutation/orderMutation.js";
@@ -23,15 +26,16 @@ const RootQuery = new GraphQLObjectType({
         console.log("ORDER QUERY", orderQuery);
 
         return {
-
+  
             ...productQuery,
             ...userQuery,
-            ...orderQuery
+            ...orderQuery,
+            ...categoryQuery,
+            ...cartQuery
 
         };
 
     }
-
 });
 
 
@@ -49,7 +53,9 @@ const RootMutation = new GraphQLObjectType({
 
             ...productMutation,
             ...userMutation,
-            ...orderMutation
+            ...orderMutation,
+            ...categoryMutation,
+            ...cartMutation
 
         };
 

@@ -1,115 +1,68 @@
-import mongoose from 'mongoose';
-import schema from 'mongoose';
-const { Schema } = mongoose;
-const orderItemSchema = new Schema({
+import mongoose from "mongoose";
 
-    product:{
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-        required:true
-    },
+
+const orderSchema = new mongoose.Schema({
 
 
     user:{
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required:true
-    },
-
-
-    quantity:{
-        type:Number,
-        required:true,
-        min:1
-    },
-
-
-    totalPrice:{
-        type:Number,
-        required:true,
-        min:0
-    },
-
-
-    selectedcolor:{
-        type:String,
-        required:true
-    },
-
-
-    selectedsize:{
-        type:String,
-        required:true
-    }
-
-
-});
-const orderSchema = new Schema({
-
-
-    user:{
-
-        type:Schema.Types.ObjectId,
-
+        type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-
         required:true
-
     },
 
 
+    items:[
 
-    items:[orderItemSchema],
+        {
 
 
+            product:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Product"
+            },
 
-    totalAmount:{
 
-        type:Number,
+            quantity:Number,
 
-        required:true,
 
-        min:0
+            size:String,
 
-    },
+
+            color:String,
+
+
+            price:Number
+
+
+        }
+
+    ],
 
 
 
     shippingAddress:{
 
 
-        street:{
-            type:String
-        },
+        street:String,
 
+        city:String,
 
-        city:{
-            type:String
-        },
+        country:String,
 
-
-        state:{
-            type:String
-        },
-
-
-        postalCode:{
-            type:String
-        },
-
-
-        country:{
-            type:String
-        }
-
+        phone:String
 
     },
 
 
 
+    totalAmount:{
+        type:Number,
+        required:true
+    },
+
+
+
     paymentStatus:{
-
-
         type:String,
 
         enum:[
@@ -119,50 +72,30 @@ const orderSchema = new Schema({
         ],
 
         default:"pending"
-
-
     },
 
 
 
     orderStatus:{
-
-
         type:String,
 
         enum:[
-
-            "pending",
             "processing",
             "shipped",
             "delivered",
             "cancelled"
-
         ],
 
-        default:"pending"
-
-
-    },
-
-
-
-    paymentId:{
-
-        type:String
-
+        default:"processing"
     }
 
 
 
-},{
+},{timestamps:true});
 
-    timestamps:true
 
-});
 
-const Order = new  mongoose.model(
+export default mongoose.model(
     "Order",
     orderSchema
 );
-export default Order;

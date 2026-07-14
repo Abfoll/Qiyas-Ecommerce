@@ -8,8 +8,6 @@ import {
 
 
 const userMutation = {
-
-
     createUser: {
 
         type:userType,
@@ -35,10 +33,8 @@ const userMutation = {
 
     },
 
-
-
+ 
     updateUser: {
-
         type:userType,
 
         args:{
@@ -87,7 +83,5 @@ const userMutation = {
 
 
 };
-
-
 
 export default userMutation;
