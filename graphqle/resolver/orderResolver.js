@@ -1,4 +1,5 @@
 import Order from "../../models/order.js";
+import context from "../context/index.js";
 
 
 const orderResolver = {
@@ -38,8 +39,10 @@ Query:{
 
     Mutation:{
 
-        createOrder:async(parent,args)=>{
-
+        createOrder:async(parent,args,context)=>{
+        if(!context.user){
+            throw new Error( " Authentication required");
+        }
 
             const order = new Order({
 
