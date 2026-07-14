@@ -1,16 +1,34 @@
-const jwt = require('jsonwebtoken');
-// const User = require('../../models/User');  // uncomment when you have the model
+import { verifyToken } from "../../utils/generateToken.js";
+import User from "../../models/User.js";
 
-module.exports = async ({ req }) => {
-  // Simple auth extraction (commented out for now)
-  // const token = req.headers.authorization?.replace('Bearer ', '') || '';
-  // let user = null;
-  // try {
-  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  //   user = await User.findById(decoded.id);
-  // } catch (e) {}
-  // return { user, req };
+export async function buildContext({ req }) {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
-  // For now, return an empty context
-  return { req };
-};
+  if (!token) return { user: null };
+
+  const payload = verifyToken(token);
+  if (!payload) return { user: null };
+
+  const user = await User.findById(payload.userId);
+  return { user };
+}
+
+export function requireAuth(context) {
+  if (!context.user) {
+    const err = new Error("You must be logged in to do this.");
+    err.extensions = { code: "UNAUTHENTICATED" };
+    throw err;
+  }
+  return context.user;
+}
+
+export function requireAdmin(context) {
+  const user = requireAuth(context);
+  if (user.role !== "admin") {
+    const err = new Error("Admin access required.");
+    err.extensions = { code: "FORBIDDEN" };
+    throw err;
+  }
+  return user;
+}

@@ -1,7 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+import { userTypeDefs } from "./user.js";
+import { categoryTypeDefs } from "./category.js";
+import { productTypeDefs } from "./product.js";
 
-// Read all .graphql files in this directory and combine them
-const typeDefs = fs.readFileSync(path.join(__dirname, 'base.graphql'), 'utf8');
+const rootTypeDefs = `#graphql
+  type Query {
+    _empty: String
+  }
 
-module.exports = typeDefs;
+  type Mutation {
+    _empty: String
+  }
+`;
+
+export const typeDefs = [rootTypeDefs, userTypeDefs, categoryTypeDefs, productTypeDefs];

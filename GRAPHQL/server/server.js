@@ -1,38 +1,42 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const { ApolloServer } = require('@apollo/server');
-const { startStandaloneServer } = require('@apollo/server/standalone');
-const { makeExecutableSchema } = require('@graphql-tools/schema');
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express5";
+import { connectDB } from "./config/database.js";
+import { typeDefs } from "./graphql/typeDefs/index.js";
+import { resolvers } from "./graphql/resolvers/index.js";
+import { buildContext } from "./graphql/context/index.js";
 
-const typeDefs = require('./graphql/typeDefs');
-const resolvers = require('./graphql/resolvers');
-const { createContext } = require('./graphql/context');
+async function start() {
+  await connectDB();
 
-const PORT = process.env.PORT || 5000;
+  const app = express();
 
-// Database connection (optional for now – you can comment it out if you don't have MongoDB running)
-// mongoose.connect(process.env.MONGODB_URI)
-//   .then(() => console.log('✅ MongoDB connected'))
-//   .catch(err => console.error('❌ MongoDB error:', err));
-
-// Build schema
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-
-// Create Apollo Server
-const server = new ApolloServer({
-  schema,
-  introspection: process.env.NODE_ENV !== 'production',
-});
-
-// Start the server
-async function startServer() {
-  const { url } = await startStandaloneServer(server, {
-    context: async ({ req }) => createContext({ req }),
-    listen: { port: PORT },
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
   });
+  await server.start();
 
-  console.log(`🚀 GraphQL server ready at ${url}`);
-  console.log(`📖 Environment: ${process.env.NODE_ENV}`);
+  const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:3000").split(",");
+
+  app.use(
+    "/graphql",
+    cors({ origin: allowedOrigins, credentials: true }),
+    express.json(),
+    expressMiddleware(server, {
+      context: buildContext,
+    })
+  );
+
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`GraphQL server ready at http://localhost:${port}/graphql`);
+  });
 }
 
-startServer();
+start().catch((err) => {
+  console.error("Failed to start server:", err);
+  process.exit(1);
+});

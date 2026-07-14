@@ -1,11 +1,24 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI || "https://graphqlzero.almansi.me/api",
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI || "http://localhost:4000/graphql",
+});
+
+// Attaches the JWT (if we have one) to every outgoing GraphQL request.
+const authLink = setContext((_, { headers }) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
 });
 
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
