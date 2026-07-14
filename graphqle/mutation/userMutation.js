@@ -1,4 +1,5 @@
 import userType from "../typedef/user.js";
+import authType from "../typedef/auth.js";
 import userResolver from "../resolver/userResolver.js";
 
 import {
@@ -8,6 +9,31 @@ import {
 
 
 const userMutation = {
+
+
+    loginUser:{
+
+        type:authType,
+
+        args:{
+
+            email:{
+                type:GraphQLString
+            },
+
+            password:{
+                type:GraphQLString
+            }
+
+        },
+
+        resolve:
+        userResolver.Mutation.loginUser
+
+    },
+
+
+
     createUser: {
 
         type:userType,
@@ -33,27 +59,34 @@ const userMutation = {
 
     },
 
+
  
     updateUser: {
+
         type:userType,
 
         args:{
+
 
             id:{
                 type:GraphQLID
             },
 
+
             name:{
                 type:GraphQLString
             },
+
 
             email:{
                 type:GraphQLString
             },
 
+
             password:{
                 type:GraphQLString
             }
+
 
         },
 
@@ -83,5 +116,6 @@ const userMutation = {
 
 
 };
+
 
 export default userMutation;

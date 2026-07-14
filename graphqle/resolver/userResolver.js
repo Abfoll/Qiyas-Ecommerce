@@ -1,11 +1,11 @@
 import User from "../../models/user.js";
 import bcrypt from "bcrypt";
-import generateToken from "../../utils/generateToken.js"
+import generateToken from "../../utils/generateToken.js";
+
+
 const userResolver = {
 
-
     Query:{
-
 
         users: async()=>{
 
@@ -16,81 +16,119 @@ const userResolver = {
 
         user: async(parent,args)=>{
 
-
             return await User.findById(args.id);
-
 
         }
 
-
     },
-
 
 
     Mutation:{
 
-        loginUser: async(parent,args)=>{
+
+      loginUser: async(parent,args)=>{
+
+    try{
+
+        console.log("LOGIN ARGS:",args);
 
 
-            const user = await User.findOne({
-                email:args.email
-            });
-            if(!user){
-
-                throw new Error("Invalid email or password");
-
-            }
+        const user = await User.findOne({
+            email:args.email
+        });
 
 
-
-            const isMatch = await bcrypt.compare(
-                args.password,
-                user.password
-            );
+        console.log("FOUND USER:",user);
 
 
+        if(!user){
 
-            if(!isMatch){
-
-                throw new Error("Invalid email or password");
-
-            }
-
-
-
-            const token = generateToken(user);
-
-
-
-            return {
-
-                token,
-
-                user
-
-            };
-
+            throw new Error("User not found");
 
         }
 
-    },
+
+        const isMatch = await bcrypt.compare(
+            args.password,
+            user.password
+        );
+
+
+        console.log("PASSWORD MATCH:",isMatch);
+
+
+
+        const token = generateToken(user);
+
+
+        console.log("TOKEN:",token);
+
+
+
+        return {
+
+            token,
+
+            user
+
+        };
+
+
+    }catch(error){
+
+        console.log("LOGIN ERROR:",error);
+
+        throw new Error(error.message);
+
+    }
+
+},
+
+
+
         createUser: async(parent,args)=>{
 
 
-            const user = new User({
-
-                name:args.name,
-
-                email:args.email,
-
-                password:args.password,
-
-                phone:args.phone
-
-            });
+            try{
 
 
-            return await user.save();
+                console.log("ARGS:",args);
+
+
+                const hashedPassword = await bcrypt.hash(
+                    args.password,
+                    10
+                );
+
+
+                const user = new User({
+
+                    name:args.name,
+
+                    email:args.email,
+
+                    password:hashedPassword
+
+                });
+
+
+
+                const savedUser = await user.save();
+
+
+                console.log("SAVED:",savedUser);
+
+
+                return savedUser;
+
+
+            }catch(error){
+
+                console.log(error);
+
+                throw new Error(error.message);
+
+            }
 
 
         },
@@ -108,7 +146,7 @@ const userResolver = {
 
                     name:args.name,
 
-                    phone:args.phone
+                    email:args.email
 
                 },
 
@@ -121,7 +159,9 @@ const userResolver = {
 
         },
 
-    deleteUser: async(parent,args)=>{
+
+
+        deleteUser: async(parent,args)=>{
 
 
             return await User.findByIdAndDelete(
@@ -134,8 +174,9 @@ const userResolver = {
         }
 
 
-    };
+    }
 
+};
 
 
 export default userResolver;

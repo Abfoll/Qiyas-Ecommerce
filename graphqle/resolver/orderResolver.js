@@ -1,7 +1,5 @@
 import Order from "../../models/order.js";
 import context from "../context/index.js";
-
-
 const orderResolver = {
 Query:{
 
@@ -12,8 +10,6 @@ Query:{
             .populate("items.product");
 
     },
-
-
     order:async(parent,args)=>{
 
         return await Order.findById(args.id)
