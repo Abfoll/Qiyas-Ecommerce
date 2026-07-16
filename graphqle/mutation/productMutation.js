@@ -1,100 +1,197 @@
 import productType from "../typedef/product.js";
 import productResolver from "../resolver/productResolver.js";
+
 import {
     GraphQLID,
     GraphQLString,
     GraphQLFloat,
-    GraphQLBoolean
-} from 'graphql';
+    GraphQLBoolean,
+    GraphQLList,
+    GraphQLInt,
+    GraphQLInputObjectType
+} from "graphql";
+
+
+
+const VariantInput = new GraphQLInputObjectType({
+
+    name:"VariantInput",
+
+    fields:()=>({
+
+        color:{
+            type:GraphQLString
+        },
+
+        size:{
+            type:GraphQLString
+        },
+
+        stock:{
+            type:GraphQLInt
+        }
+
+    })
+
+});
+
+
+
 const productMutation = {
 
 
     createProduct: {
 
-        type: productType,
+        type:productType,
 
-        args: {
 
-            name: {
-                type: GraphQLString
+        args:{
+
+
+            name:{
+                type:GraphQLString
             },
 
-            price: {
-                type: GraphQLFloat
+
+            description:{
+                type:GraphQLString
             },
 
-            description: {
-                type: GraphQLString
+
+            price:{
+                type:GraphQLFloat
             },
 
-            featured: {
-                type: GraphQLBoolean
+
+            images:{
+                type:new GraphQLList(GraphQLString)
+            },
+
+
+            category:{
+                type:GraphQLID
+            },
+
+
+            gender:{
+                type:GraphQLString
+            },
+
+
+            variants:{
+                type:new GraphQLList(VariantInput)
+            },
+
+
+            featured:{
+                type:GraphQLBoolean
             }
+
 
         },
 
 
-        resolve: productResolver.Mutation.createProduct
+        resolve:
+        productResolver.Mutation.createProduct
 
     },
 
 
 
-    updateProduct: {
-
-        type: productType,
 
 
-        args: {
+    updateProduct:{
 
-            id: {
-                type: GraphQLID
+
+        type:productType,
+
+
+        args:{
+
+
+            id:{
+                type:GraphQLID
             },
 
-            name: {
-                type: GraphQLString
+
+            name:{
+                type:GraphQLString
             },
 
-            price: {
-                type: GraphQLFloat
+
+            description:{
+                type:GraphQLString
             },
 
-            description: {
-                type: GraphQLString
+
+            price:{
+                type:GraphQLFloat
             },
 
-            featured: {
-                type: GraphQLBoolean
+
+            images:{
+                type:new GraphQLList(GraphQLString)
+            },
+
+
+            category:{
+                type:GraphQLID
+            },
+
+
+            gender:{
+                type:GraphQLString
+            },
+
+
+            variants:{
+                type:new GraphQLList(VariantInput)
+            },
+
+
+            featured:{
+                type:GraphQLBoolean
             }
+
 
         },
 
 
-        resolve: productResolver.Mutation.updateProduct
+        resolve:
+        productResolver.Mutation.updateProduct
 
     },
 
 
 
-    deleteProduct: {
-
-        type: productType,
 
 
-        args: {
+    deleteProduct:{
 
-            id: {
-                type: GraphQLID
+
+        type:productType,
+
+
+        args:{
+
+
+            id:{
+                type:GraphQLID
             }
+
 
         },
 
 
-        resolve: productResolver.Mutation.deleteProduct
+        resolve:
+        productResolver.Mutation.deleteProduct
 
     }
 
 
+
 };
+
+
 
 export default productMutation;

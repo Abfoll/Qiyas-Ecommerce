@@ -27,22 +27,21 @@ const OrderItemInput = new GraphQLInputObjectType({
             type:GraphQLInt
         },
 
-        totalPrice:{
+        size:{
+            type:GraphQLString
+        },
+
+        color:{
+            type:GraphQLString
+        },
+
+        price:{
             type:GraphQLFloat
-        },
-
-        selectedcolor:{
-            type:GraphQLString
-        },
-
-        selectedsize:{
-            type:GraphQLString
         }
 
     }
 
 });
-
 
 
 const ShippingInput = new GraphQLInputObjectType({
@@ -59,21 +58,21 @@ const ShippingInput = new GraphQLInputObjectType({
             type:GraphQLString
         },
 
-        state:{
-            type:GraphQLString
-        },
-
-        postalCode:{
-            type:GraphQLString
-        },
-
         country:{
+            type:GraphQLString
+        },
+
+        phone:{
             type:GraphQLString
         }
 
     }
 
 });
+console.log(
+  "CREATE ORDER:",
+  orderResolver.Mutation.createOrder
+);
 const orderMutation = {
 
 

@@ -2,7 +2,6 @@ import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import generateToken from "../../utils/generateToken.js";
 
-
 const userResolver = {
 
     Query:{
@@ -46,14 +45,13 @@ const userResolver = {
             throw new Error("User not found");
 
         }
-
-
         const isMatch = await bcrypt.compare(
             args.password,
             user.password
         );
-
-
+        if(!isMatch){
+            throw new error("invalid password");
+        }
         console.log("PASSWORD MATCH:",isMatch);
 
 
@@ -67,13 +65,10 @@ const userResolver = {
 
         return {
 
-            token,
+        token,
 
             user
-
-        };
-
-
+};
     }catch(error){
 
         console.log("LOGIN ERROR:",error);
@@ -84,15 +79,10 @@ const userResolver = {
 
 },
 
-
-
         createUser: async(parent,args)=>{
 
 
-            try{
-
-
-                console.log("ARGS:",args);
+            try{  console.log("ARGS:",args);
 
 
                 const hashedPassword = await bcrypt.hash(

@@ -6,8 +6,6 @@ import {
     GraphQLBoolean
 } from "graphql";
 
-
-
 const RoleType = new GraphQLEnumType({
 
     name:"Role",

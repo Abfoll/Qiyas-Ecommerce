@@ -6,12 +6,14 @@ const productResolver = {
     Query: {
 
         products: async () => {
-            return await Product.find();
+            return await Product.find()
+            .populate("category");
         },
 
 
         product: async (parent, args) => {
-            return await Product.findById(args.id);
+            return await Product.findById(args.id)
+             .populate("category");;
         }
 
     },
@@ -19,22 +21,29 @@ const productResolver = {
 
             const product = new Product({
 
-                name: args.name,
-                price: args.price,
-                description: args.description,
-                gender: args.gender,
-                featured: args.featured
+    name:args.name,
 
-            });
+    description:args.description,
 
+    price:args.price,
 
+    images:args.images,
+
+    category:args.category,
+
+    gender:args.gender,
+
+    variants:args.variants,
+
+    featured:args.featured
+
+});
             return await product.save();
 
-        },
+      },
         deleteProduct: async (parent, args) => {
 
             return await Product.findByIdAndDelete(args.id);
-
         },
         updateProduct: async (parent, args) => {
 

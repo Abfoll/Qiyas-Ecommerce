@@ -9,23 +9,11 @@ import schema from "./graphqle/schema.js";
 import connectDB from "./config/database.js";
 
 import context from "./graphqle/context/index.js";
-
-
 dotenv.config();
-
-
 const app = express();
-
-
 app.use(cors());
-
 app.use(express.json());
-
-
 connectDB();
-
-
-
 app.use(
 "/graphql",
 
@@ -35,7 +23,9 @@ graphqlHTTP(async(req)=>({
 
     graphiql:true,
 
-    context: await context(req)
+    context:{
+       user:req.user
+    }
 
 }))
 

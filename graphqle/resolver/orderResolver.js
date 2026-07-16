@@ -1,73 +1,57 @@
 import Order from "../../models/order.js";
-import context from "../context/index.js";
+
 const orderResolver = {
-Query:{
 
-    orders:async()=>{
+    Query: {
 
-        return await Order.find()
-            .populate("user")
-            .populate("items.product");
-
-    },
-    order:async(parent,args)=>{
-
-        return await Order.findById(args.id)
-            .populate("user")
-            .populate("items.product");
-
-    },
+        orders: async () => {
+            return await Order.find();
+        },
 
 
-    userOrders:async(parent,args)=>{
-
-        return await Order.find({
-            user:args.userId
-        })
-        .populate("user")
-        .populate("items.product");
-
-    }
-
-},
+        order: async (parent, args) => {
+            return await Order.findById(args.id);
+        },
 
 
-
-    Mutation:{
-
-        createOrder:async(parent,args,context)=>{
-        if(!context.user){
-            throw new Error( " Authentication required");
+        userOrders: async (parent, args) => {
+            return await Order.find({
+                user: args.userId
+            });
         }
+
+    },
+
+
+    Mutation: {
+
+        createOrder: async (parent, args, context) => {
+
+               console.log(args.items);
 
             const order = new Order({
 
-                user:args.user,
+              user: args.user,
 
-                items:args.items,
+                items: args.items,
 
-                totalAmount:args.totalAmount,
+                totalAmount: args.totalAmount,
 
-                shippingAddress:args.shippingAddress
+                shippingAddress: args.shippingAddress
 
             });
-
 
 
             const savedOrder = await order.save();
 
 
-
-            return await Order.findById(savedOrder._id)
-
-                .populate("user")
-
-                .populate("items.product");
-
+            return savedOrder;
+       
 
         },
 
-        updateOrderStatus:async(parent,args)=>{
+
+        updateOrderStatus: async (parent, args) => {
 
 
             const updatedOrder = await Order.findByIdAndUpdate(
@@ -75,39 +59,32 @@ Query:{
                 args.id,
 
                 {
-
-                    orderStatus:args.orderStatus,
-
-                    paymentStatus:args.paymentStatus
-
+                    orderStatus: args.orderStatus,
+                    paymentStatus: args.paymentStatus
                 },
 
                 {
-
                     new:true
-
                 }
 
             );
 
 
+            if(!updatedOrder){
+                throw new Error("Order not found");
+            }
 
-            return await Order.findById(updatedOrder._id)
 
-                .populate("user")
-
-                .populate("items.product");
-
+            return updatedOrder;
 
         },
 
-        deleteOrder:async(parent,args)=>{
+
+        deleteOrder: async (parent,args)=>{
 
 
             const deletedOrder = await Order.findByIdAndDelete(
-
                 args.id
-
             );
 
 
@@ -120,12 +97,11 @@ Query:{
 
             return deletedOrder;
 
-
         }
-
 
     }
 
-
 };
+
+
 export default orderResolver;

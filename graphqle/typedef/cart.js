@@ -9,6 +9,9 @@ import {
 const CartItemType = new GraphQLObjectType({
     name:"CartItem",
     fields:()=>({
+        id:{
+            type:GraphQLID
+        },
         product:{
             type:GraphQLID
         },
@@ -27,7 +30,6 @@ const CartItemType = new GraphQLObjectType({
     })
 
 });
-
 const cartType = new GraphQLObjectType({
 
     name:"Cart",
@@ -38,8 +40,7 @@ const cartType = new GraphQLObjectType({
             type:GraphQLID
         },
 
-
-        user:{
+    user:{
             type:GraphQLID
         },
 

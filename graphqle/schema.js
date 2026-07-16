@@ -47,15 +47,23 @@ const RootMutation = new GraphQLObjectType({
 
         console.log("PRODUCT MUTATION", productMutation);
         console.log("USER MUTATION", userMutation);
-        console.log("ORDER MUTATION", orderMutation);
+        console.log(
+    "ORDER MUTATION KEYS:",
+    Object.keys(orderMutation)
+);
+
+console.log(
+    "CREATE ORDER RESOLVER:",
+    orderMutation.createOrder.resolve
+);
 
         return {
 
-            ...productMutation,
+           ...productMutation,
             ...userMutation,
             ...orderMutation,
             ...categoryMutation,
-            ...cartMutation
+             ...cartMutation
 
         };
 

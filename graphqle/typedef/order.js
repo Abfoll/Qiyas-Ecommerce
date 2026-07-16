@@ -19,21 +19,23 @@ const OrderItemType = new GraphQLObjectType({
             type:GraphQLID
         },
 
-
         quantity:{
             type:GraphQLInt
         },
 
-
         size:{
-            type:GraphQLString
+            type:GraphQLString,
+            resolve:(item)=>{
+                return item.size || null;
+            }
         },
-
 
         color:{
-            type:GraphQLString
+            type:GraphQLString,
+            resolve:(item)=>{
+                return item.color || null;
+            }
         },
-
 
         price:{
             type:GraphQLFloat
@@ -75,48 +77,41 @@ const ShippingAddressType = new GraphQLObjectType({
 });
 
 
-
 const orderType = new GraphQLObjectType({
 
-    name:"Order",
+name:"Order",
 
-    fields:()=>({
+fields:()=>({
 
-        id:{
-            type:GraphQLID
-        },
+    id:{
+        type:GraphQLID
+    },
 
+    user:{
+        type:GraphQLID
+    },
 
-        user:{
-            type:GraphQLID
-        },
+    items:{
+        type:new GraphQLList(OrderItemType)
+    },
 
+    shippingAddress:{
+        type:ShippingAddressType
+    },
 
-        items:{
-            type:new GraphQLList(OrderItemType)
-        },
+    totalAmount:{
+        type:GraphQLFloat
+    },
 
+    paymentStatus:{
+        type:GraphQLString
+    },
 
-        shippingAddress:{
-            type:ShippingAddressType
-        },
+    orderStatus:{
+        type:GraphQLString
+    }
 
-
-        totalAmount:{
-            type:GraphQLFloat
-        },
-
-
-        paymentStatus:{
-            type:GraphQLString
-        },
-
-
-        orderStatus:{
-            type:GraphQLString
-        }
-
-    })
+})
 
 });
 

@@ -16,7 +16,9 @@ const ProductVariantType = new GraphQLObjectType({
     name:"ProductVariant",
 
     fields:()=>({
-
+        id:{
+            type:GraphQLID
+        },
         color:{
             type:GraphQLString
         },

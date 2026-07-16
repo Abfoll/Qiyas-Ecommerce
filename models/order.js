@@ -18,11 +18,16 @@ const orderSchema = new mongoose.Schema({
 
             product:{
                 type:mongoose.Schema.Types.ObjectId,
-                ref:"Product"
+                ref:"Product",
+                required:true
             },
 
 
-            quantity:Number,
+            quantity:{
+    type:Number,
+    required:true,
+    min:1
+},
 
 
             size:String,
@@ -31,7 +36,11 @@ const orderSchema = new mongoose.Schema({
             color:String,
 
 
-            price:Number
+           price:{
+    type:Number,
+    required:true,
+    min:0
+},
 
 
         }
