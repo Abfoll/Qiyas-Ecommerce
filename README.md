@@ -1,1 +1,0 @@
-# Qiyas-Ecommerce
