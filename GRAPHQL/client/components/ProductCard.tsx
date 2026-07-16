@@ -1,10 +1,17 @@
-import { Product } from "@/lib/products";
+import { BackendProduct } from "@/lib/graphql/products";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: BackendProduct }) {
+  const image = product.images?.[0];
+
   return (
     <div className="bg-white rounded-lg overflow-hidden border border-slate-200 hover:border-orange-400 transition-colors shadow-sm">
-      <div className="relative h-40 bg-slate-100 flex items-center justify-center text-slate-400 text-xs">
-        image
+      <div className="relative h-40 bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden">
+        {image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={image} alt={product.name} className="w-full h-full object-cover" />
+        ) : (
+          "image"
+        )}
         {product.badge && (
           <span className="absolute top-2 left-2 bg-orange-500 text-white text-[10px] font-semibold px-2 py-1 rounded">
             {product.badge}
@@ -23,7 +30,7 @@ export default function ProductCard({ product }: { product: Product }) {
           )}
         </div>
         <p className="text-xs text-slate-500">
-          ★ {product.rating} ({product.reviews})
+          ★ {product.rating} ({product.reviewsCount})
         </p>
       </div>
     </div>

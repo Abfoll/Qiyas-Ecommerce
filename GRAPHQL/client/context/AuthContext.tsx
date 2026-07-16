@@ -11,7 +11,7 @@ import { gql } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import apolloClient from "@/lib/apolloClient";
 
-type User = { id: string; name: string; email: string };
+type User = { id: string; name: string; email: string; role: string };
 
 type AuthContextValue = {
   user: User | null;
@@ -39,6 +39,7 @@ const LOGIN_MUTATION = gql`
         id
         name
         email
+        role
       }
     }
   }
@@ -52,6 +53,7 @@ const REGISTER_MUTATION = gql`
         id
         name
         email
+        role
       }
     }
   }
@@ -63,6 +65,7 @@ const ME_QUERY = gql`
       id
       name
       email
+      role
     }
   }
 `;

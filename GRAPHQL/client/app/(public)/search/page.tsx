@@ -1,22 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { useQuery } from "@apollo/client/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SlideIn from "@/components/SlideIn";
-import { products } from "@/lib/products";
+import { PRODUCTS_QUERY, ProductsData, ProductsVars } from "@/lib/graphql/products";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
+  const trimmed = query.trim();
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return [];
-    return products.filter(
-      (p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
-    );
-  }, [query]);
+  const { data, loading, error } = useQuery<ProductsData, ProductsVars>(PRODUCTS_QUERY, {
+    variables: { filter: { search: trimmed } },
+    skip: trimmed === "",
+  });
+
+  const results = data?.products ?? [];
 
   return (
     <main>
@@ -36,14 +37,18 @@ export default function SearchPage() {
           />
         </div>
 
-        {query.trim() === "" && (
+        {trimmed === "" && (
           <p className="text-slate-400 text-sm">Start typing to search the catalog.</p>
         )}
 
-        {query.trim() !== "" && results.length === 0 && (
-          <p className="text-slate-400 text-sm">
-            No results for &ldquo;{query}&rdquo;.
-          </p>
+        {trimmed !== "" && loading && <p className="text-slate-400 text-sm">Searching…</p>}
+
+        {trimmed !== "" && error && (
+          <p className="text-red-500 text-sm">Search failed: {error.message}</p>
+        )}
+
+        {trimmed !== "" && !loading && !error && results.length === 0 && (
+          <p className="text-slate-400 text-sm">No results for &ldquo;{query}&rdquo;.</p>
         )}
 
         {results.length > 0 && (

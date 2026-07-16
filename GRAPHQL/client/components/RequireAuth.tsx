@@ -5,16 +5,29 @@ import { useRouter, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { useAuth } from "@/context/AuthContext";
 
-export default function RequireAuth({ children }: { children: ReactNode }) {
+export default function RequireAuth({
+  children,
+  adminOnly = false,
+}: {
+  children: ReactNode;
+  adminOnly?: boolean;
+}) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (loading) return;
+
+    if (!user) {
       router.push(`/login?from=${encodeURIComponent(pathname)}`);
+      return;
     }
-  }, [loading, user, pathname, router]);
+
+    if (adminOnly && user.role !== "admin") {
+      router.push("/");
+    }
+  }, [loading, user, adminOnly, pathname, router]);
 
   if (loading) {
     return (
@@ -24,7 +37,7 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!user) {
+  if (!user || (adminOnly && user.role !== "admin")) {
     return null;
   }
 
